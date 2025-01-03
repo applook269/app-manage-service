@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hooke.zdl.admin.module.system.department.dao.DepartmentDao">
+
+    <select id="listAll" resultType="com.hooke.zdl.admin.module.system.department.domain.vo.DepartmentVO">
+        SELECT zdl_admin_department.*,
+               zdl_admin_employee.actual_name   as managerName,
+               parent_department.`name` as parentName
+        FROM zdl_admin_department
+                 left join zdl_admin_employee on zdl_admin_department.manager_id = zdl_admin_employee.employee_id
+                 left join zdl_admin_department parent_department on zdl_admin_department.parent_id = parent_department.department_id
+        order by sort desc
+    </select>
+
+    <select id="countSubDepartment" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM zdl_admin_department
+        WHERE parent_id = #{departmentId}
+    </select>
+
+
+</mapper>

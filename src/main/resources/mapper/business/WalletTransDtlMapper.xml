@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hooke.zdl.admin.module.business.dao.WalletTransDtlMapper">
+    <!-- 根据key查询获取数据 -->
+    <select id="getTotalRecharge" resultType="com.hooke.zdl.admin.module.business.entity.WalletTransDtl">
+        SELECT SUM(amount) as amount FROM zdl_wallet_trans_dtl
+        WHERE USER_ID = #{userId} AND TYPE = 'RECHARGE' AND STATUS = 'SUCCESS'
+        GROUP BY USER_ID
+    </select>
+
+</mapper>
