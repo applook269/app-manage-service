@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 public class MybatisUpdateListener implements UpdateListener {
     @Override
     public void onUpdate(Object o) {
-        ReflectUtil.setFieldValue(o, "updateTime", LocalDateTime.now());
+        if (ReflectUtil.hasField(o.getClass(), "updateTime")) {
+            ReflectUtil.setFieldValue(o, "updateTime", LocalDateTime.now());
+        }
     }
 }
