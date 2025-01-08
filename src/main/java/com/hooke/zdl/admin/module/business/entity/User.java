@@ -14,6 +14,7 @@ public class User extends BaseEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;
+
     /**
      * 姓名
      */
@@ -50,6 +51,16 @@ public class User extends BaseEntity {
     private String phoneNo;
 
     /**
+     * 用户类型
+     */
+    private String type;
+
+    /**
+     * 是否羊毛用户
+     */
+    private Boolean isWool;
+
+    /**
      * 登录密码
      */
     private String password;
@@ -68,5 +79,10 @@ public class User extends BaseEntity {
      * 头像ID
      */
     private String photo;
+
+    /**
+     * 邀请码
+     */
+    private String invitationCode;
 
 }

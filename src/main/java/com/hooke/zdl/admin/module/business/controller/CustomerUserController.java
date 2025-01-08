@@ -25,7 +25,7 @@ public class CustomerUserController {
 
     @Operation(summary = "用户分页")
     @GetMapping("/page")
-    public ResponseDTO<PageResult<CustomerUserModel>> pageUser(User user, PageParam pageParam) {
+    public ResponseDTO<PageResult<CustomerUserModel>> pageUser(CustomerUserModel user, PageParam pageParam) {
         PageResult<CustomerUserModel> model = userAdminService.pageUser(user, pageParam);
         return ResponseDTO.ok(model);
     }

@@ -26,6 +26,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.mybatisflex.core.query.QueryMethods.sum;
+
 
 @Service
 public class WalletAdminService {
@@ -48,7 +50,8 @@ public class WalletAdminService {
 
     public PageResult<WalletTransDtl> pageWalletTrans(WalletTransDtl walletTransDtl, PageParam pageParam) {
         Page<WalletTransDtl> page = SmartPageUtil.convert2PageQuery(pageParam);
-        Page<WalletTransDtl> walletPage = walletTransDtlMapper.paginate(page, QueryWrapper.create(walletTransDtl));
+        QueryWrapper queryWrapper = QueryWrapper.create(walletTransDtl).orderBy(WalletTransDtl::getId).desc();
+        Page<WalletTransDtl> walletPage = walletTransDtlMapper.paginate(page, queryWrapper);
         return SmartPageUtil.convert2PageResult(page, walletPage.getRecords(), WalletTransDtl.class);
     }
 
@@ -64,10 +67,10 @@ public class WalletAdminService {
             // 钱包余额：当前余额+交易金额
             wallet.setBalance(wallet.getBalance().add(detail.getAmount()));
             walletMapper.update(wallet);
-            // 升级VIP
-            vipLevelUp(detail.getUserId());
         }
         walletTransDtlMapper.update(detail);
+        // 升级VIP
+        vipLevelUp(detail.getUserId());
     }
 
     @Transactional
@@ -96,7 +99,12 @@ public class WalletAdminService {
         Integer vipLevel = user.getVipLevel();
         // 判断充值金额总数是否达到 VIP升级要求
         List<RuleVip> rules = ruleVipMapper.selectAll();
-        WalletTransDtl dtl = walletTransDtlMapper.getTotalRecharge(user.getId());
+        WalletTransDtl dtl = QueryChain.of(walletTransDtlMapper)
+                .select(sum(WalletTransDtl::getAmount).as("AMOUNT"))
+                .eq(WalletTransDtl::getUserId, userId)
+                .eq(WalletTransDtl::getType, "RECHARGE")
+                .eq(WalletTransDtl::getStatus, "SUCCESS")
+                .one();
         BigDecimal amount = dtl == null ? BigDecimal.ZERO : dtl.getAmount();
         // 计算可升级的最大VIP等级
         Integer newVipLevel = rules.stream()

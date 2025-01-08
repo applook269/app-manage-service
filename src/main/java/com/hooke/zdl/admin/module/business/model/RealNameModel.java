@@ -2,6 +2,8 @@ package com.hooke.zdl.admin.module.business.model;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class RealNameModel {
     private Integer id;
@@ -45,5 +47,7 @@ public class RealNameModel {
      * 实名认证状态
      */
     private String status;
+
+    private LocalDateTime insertTime;
 
 }
