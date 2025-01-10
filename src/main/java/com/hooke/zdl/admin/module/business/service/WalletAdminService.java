@@ -1,7 +1,6 @@
 package com.hooke.zdl.admin.module.business.service;
 
 
-
 import com.hooke.zdl.admin.common.domain.PageParam;
 import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.util.SmartPageUtil;
@@ -15,6 +14,7 @@ import com.hooke.zdl.admin.module.business.entity.RuleVip;
 import com.hooke.zdl.admin.module.business.entity.User;
 import com.hooke.zdl.admin.module.business.entity.Wallet;
 import com.hooke.zdl.admin.module.business.entity.WalletTransDtl;
+import com.hooke.zdl.admin.module.business.model.RechargeResultRequest;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.mybatisflex.core.query.QueryMethods.sum;
@@ -71,6 +72,32 @@ public class WalletAdminService {
         walletTransDtlMapper.update(detail);
         // 升级VIP
         vipLevelUp(detail.getUserId());
+    }
+
+    @Transactional
+    public void otherRechargeConfirm(RechargeResultRequest rechargeResultRequest) {
+        WalletTransDtl detail = QueryChain.of(walletTransDtlMapper).eq(WalletTransDtl::getTransactionNo, rechargeResultRequest.getMchOrderNo()).one();
+        int status = rechargeResultRequest.getStatus();
+        if (status == 2 || status == 3) {
+            // 支付成功
+            Wallet wallet = QueryChain.of(walletMapper).eq(Wallet::getUserId, detail.getUserId()).one();
+            detail.setStatus("SUCCESS");
+            detail.setCompleteTime(LocalDateTime.now());
+            // 交易余额：充值时余额+交易金额
+            detail.setBalance(detail.getBalance().add(detail.getAmount()));
+            // 钱包余额：当前余额+交易金额
+            wallet.setBalance(wallet.getBalance().add(detail.getAmount()));
+            walletMapper.update(wallet);
+            walletTransDtlMapper.update(detail);
+            // 升级VIP
+            vipLevelUp(detail.getUserId());
+        } else if (status == -2) {
+            // 支付失败
+            detail.setStatus("FAILURE");
+            detail.setCompleteTime(LocalDateTime.now());
+            walletTransDtlMapper.update(detail);
+        }
+        // 其他情况不处理
     }
 
     @Transactional

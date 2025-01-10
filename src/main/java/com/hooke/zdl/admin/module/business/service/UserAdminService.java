@@ -16,6 +16,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.query.SqlOperators;
+import com.mybatisflex.core.update.UpdateChain;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.hooke.zdl.admin.module.business.entity.table.RealNameValidateTableDef.REAL_NAME_VALIDATE;
+import static com.hooke.zdl.admin.module.business.entity.table.TeamMemberTableDef.TEAM_MEMBER;
 import static com.hooke.zdl.admin.module.business.entity.table.TeamTableDef.TEAM;
 import static com.hooke.zdl.admin.module.business.entity.table.UserTableDef.USER;
 import static com.hooke.zdl.admin.module.business.entity.table.WalletTableDef.WALLET;
@@ -46,6 +48,8 @@ public class UserAdminService extends ServiceImpl<UserMapper, User> {
     private TeamMapper teamMapper;
     @Autowired
     private RealNameValidateMapper realNameValidateMapper;
+    @Autowired
+    private TeamMemberMapper teamMemberMapper;
 
     public PageResult<CustomerUserModel> pageUser(CustomerUserModel user, PageParam pageParam) {
         Page<CustomerUserModel> page = SmartPageUtil.convert2PageQuery(pageParam);
@@ -87,5 +91,29 @@ public class UserAdminService extends ServiceImpl<UserMapper, User> {
     public void editUser(User user) {
         updateById(user);
     }
+
+    public void batchBan(User user) {
+        batchUpdateEnable(user, false);
+    }
+
+    public void batchUnBan(User user) {
+        batchUpdateEnable(user, true);
+    }
+
+    private void batchUpdateEnable(User user, boolean enable) {
+        List<Integer> subUserIds = QueryChain.of(teamMemberMapper)
+                .leftJoin(TEAM).on(TEAM.ID.eq(TEAM_MEMBER.TEAM_ID))
+                .where(TEAM.LEADER_ID.eq(user.getId()))
+                .list().stream().map(TeamMember::getMemberUserId).toList();
+
+        List<Integer> userIds = new ArrayList<>(subUserIds);
+        userIds.add(user.getId());
+
+        UpdateChain.of(userMapper)
+                .set(USER.ENABLE, enable)
+                .where(USER.ID.in(userIds))
+                .update();
+    }
+
 
 }

@@ -36,8 +36,12 @@ public class RechargeConfig extends BaseEntity {
     private String icon;
 
     /**
+     * 是否需要审批
+     */
+    private Boolean isApproval;
+
+    /**
      * 充值详情
      */
     private String detail;
-
 }

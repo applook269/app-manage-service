@@ -5,6 +5,7 @@ import com.hooke.zdl.admin.common.domain.PageParam;
 import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.domain.ResponseDTO;
 import com.hooke.zdl.admin.module.business.entity.PositionXyt;
+import com.hooke.zdl.admin.module.business.model.PositionXytModel;
 import com.hooke.zdl.admin.module.business.service.PositionXytAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,8 +23,8 @@ public class PositionXytAdminController {
 
     @Operation(summary = "小盈通持仓")
     @GetMapping("/page")
-    public ResponseDTO<PageResult<PositionXyt>> pagePositionXyt(PositionXyt positionXyt, PageParam pageParam) {
-        PageResult<PositionXyt> model = positionXytAdminService.pagePositionXyt(positionXyt, pageParam);
+    public ResponseDTO<PageResult<PositionXytModel>> pagePositionXyt(PositionXytModel positionXyt, PageParam pageParam) {
+        PageResult<PositionXytModel> model = positionXytAdminService.pagePositionXyt(positionXyt, pageParam);
         return ResponseDTO.ok(model);
     }
 

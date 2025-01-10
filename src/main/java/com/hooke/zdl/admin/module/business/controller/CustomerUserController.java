@@ -36,4 +36,18 @@ public class CustomerUserController {
         userAdminService.editUser(user);
         return ResponseDTO.ok();
     }
+
+    @Operation(summary = "批量封禁")
+    @PostMapping("/batch-ban")
+    public ResponseDTO<Void> batchBan(@RequestBody User user) {
+        userAdminService.batchBan(user);
+        return ResponseDTO.ok();
+    }
+
+    @Operation(summary = "批量解封")
+    @PostMapping("/batch-un-ban")
+    public ResponseDTO<Void> batchUnBan(@RequestBody User user) {
+        userAdminService.batchUnBan(user);
+        return ResponseDTO.ok();
+    }
 }
