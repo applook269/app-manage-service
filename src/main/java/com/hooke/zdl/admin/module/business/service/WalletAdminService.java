@@ -15,7 +15,9 @@ import com.hooke.zdl.admin.module.business.entity.User;
 import com.hooke.zdl.admin.module.business.entity.Wallet;
 import com.hooke.zdl.admin.module.business.entity.WalletTransDtl;
 import com.hooke.zdl.admin.module.business.model.RechargeResultRequest;
+import com.hooke.zdl.admin.module.business.model.WalletTransDtlModel;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.If;
 import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.hooke.zdl.admin.module.business.entity.table.UserTableDef.USER;
+import static com.hooke.zdl.admin.module.business.entity.table.WalletTransDtlTableDef.WALLET_TRANS_DTL;
 import static com.mybatisflex.core.query.QueryMethods.sum;
 
 
@@ -49,11 +53,18 @@ public class WalletAdminService {
         return SmartPageUtil.convert2PageResult(page, walletPage.getRecords(), Wallet.class);
     }
 
-    public PageResult<WalletTransDtl> pageWalletTrans(WalletTransDtl walletTransDtl, PageParam pageParam) {
-        Page<WalletTransDtl> page = SmartPageUtil.convert2PageQuery(pageParam);
-        QueryWrapper queryWrapper = QueryWrapper.create(walletTransDtl).orderBy(WalletTransDtl::getId).desc();
-        Page<WalletTransDtl> walletPage = walletTransDtlMapper.paginate(page, queryWrapper);
-        return SmartPageUtil.convert2PageResult(page, walletPage.getRecords(), WalletTransDtl.class);
+    public PageResult<WalletTransDtlModel> pageWalletTrans(WalletTransDtlModel walletTransDtl, PageParam pageParam) {
+        Page<WalletTransDtlModel> page = SmartPageUtil.convert2PageQuery(pageParam);
+        QueryWrapper queryWrapper = new QueryWrapper()
+                .select(WALLET_TRANS_DTL.DEFAULT_COLUMNS)
+                .select(USER.NAME.as("userName"), USER.PHONE_NO.as("phoneNo"), USER.TYPE.as("userType"), USER.IS_WOOL.as("isWool"))
+                .from(WALLET_TRANS_DTL)
+                .leftJoin(USER).on(WALLET_TRANS_DTL.USER_ID.eq(USER.ID))
+                .where(WALLET_TRANS_DTL.STATUS.eq(walletTransDtl.getStatus()))
+                .and(WALLET_TRANS_DTL.TYPE.eq(walletTransDtl.getType()))
+                .orderBy(WALLET_TRANS_DTL.ID, false);
+        Page<WalletTransDtlModel> walletPage = walletTransDtlMapper.paginateAs(page, queryWrapper, WalletTransDtlModel.class);
+        return SmartPageUtil.convert2PageResult(page, walletPage.getRecords());
     }
 
     @Transactional

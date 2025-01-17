@@ -8,6 +8,7 @@ import com.hooke.zdl.admin.common.domain.ResponseDTO;
 import com.hooke.zdl.admin.module.business.entity.Wallet;
 import com.hooke.zdl.admin.module.business.entity.WalletTransDtl;
 import com.hooke.zdl.admin.module.business.model.RechargeResultRequest;
+import com.hooke.zdl.admin.module.business.model.WalletTransDtlModel;
 import com.hooke.zdl.admin.module.business.service.WalletAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +36,8 @@ public class WalletAdminController {
 
     @Operation(summary = "交易明细分页")
     @GetMapping("/page-trans")
-    public ResponseDTO<PageResult<WalletTransDtl>> pageWalletTrans(WalletTransDtl walletTransDtl, PageParam pageParam) {
-        PageResult<WalletTransDtl> walletTransDtlPage = walletAdminService.pageWalletTrans(walletTransDtl, pageParam);
+    public ResponseDTO<PageResult<WalletTransDtlModel>> pageWalletTrans(WalletTransDtlModel walletTransDtl, PageParam pageParam) {
+        PageResult<WalletTransDtlModel> walletTransDtlPage = walletAdminService.pageWalletTrans(walletTransDtl, pageParam);
         return ResponseDTO.ok(walletTransDtlPage);
     }
 
