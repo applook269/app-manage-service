@@ -10,6 +10,9 @@ import com.hooke.zdl.admin.module.support.oos.ObjectStorageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -67,8 +70,17 @@ public class FileAdminController {
     @GetMapping("/download/{objectName}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String objectName) throws Exception {
         byte[] fileContent = objectStorageService.downloadFile(objectName);
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.APPLICATION_OCTET_STREAM;
+        if (objectName.endsWith(".jpg") || objectName.endsWith(".png")) {
+            type = MediaType.IMAGE_JPEG;
+        } else if (objectName.endsWith(".pdf")) {
+            type = MediaType.APPLICATION_PDF;
+        }
+        headers.setContentType(type);
         return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=" + objectName)
+                .headers(headers)
                 .body(fileContent);
     }
 }

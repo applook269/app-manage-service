@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.hooke.zdl.admin.module.business.entity.table.ProductXytTableDef.PRODUCT_XYT;
+
 @Service
 public class XytAdminService extends ServiceImpl<ProductXytMapper, ProductXyt> {
     @Autowired
@@ -23,8 +25,10 @@ public class XytAdminService extends ServiceImpl<ProductXytMapper, ProductXyt> {
 
     public PageResult<ProductXyt> pageXyt(ProductXyt productXyt, PageParam pageParam) {
         Page<ProductXyt> page = SmartPageUtil.convert2PageQuery(pageParam);
-        Page<ProductXyt> productXytPage = page(page, QueryWrapper.create(productXyt));
-        return SmartPageUtil.convert2PageResult(page, productXytPage.getRecords(), ProductXyt.class);
+        Page<ProductXyt> xytPage = QueryChain.of(ProductXyt.class)
+                .where(PRODUCT_XYT.NAME.like(productXyt.getName()))
+                .page(page);
+        return SmartPageUtil.convert2PageResult(page, xytPage.getRecords(), ProductXyt.class);
     }
 
     public void addXyt(ProductXyt productXyt) {

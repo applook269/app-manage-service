@@ -5,6 +5,7 @@ import com.hooke.zdl.admin.common.domain.PageParam;
 import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.domain.ResponseDTO;
 import com.hooke.zdl.admin.module.business.entity.Feedback;
+import com.hooke.zdl.admin.module.business.model.FeedbackModel;
 import com.hooke.zdl.admin.module.business.service.FeedbackAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,8 +25,8 @@ public class FeedbackAdminController {
 
     @Operation(summary = "字典配置分页")
     @GetMapping("/page")
-    public ResponseDTO<PageResult<Feedback>> pageFeedback(Feedback feedback, PageParam pageParam) {
-        PageResult<Feedback> feedbackPageResult = feedbackAdminService.pageFeedback(feedback, pageParam);
+    public ResponseDTO<PageResult<FeedbackModel>> pageFeedback(FeedbackModel feedback, PageParam pageParam) {
+        PageResult<FeedbackModel> feedbackPageResult = feedbackAdminService.pageFeedback(feedback, pageParam);
         return ResponseDTO.ok(feedbackPageResult);
     }
 

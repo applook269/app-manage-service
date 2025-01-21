@@ -117,4 +117,9 @@ public class CustomerUserModel {
      * 购买金额
      */
     private BigDecimal totalPurchase;
+
+    /**
+     * 搜索条件
+     */
+    private String searchText;
 }

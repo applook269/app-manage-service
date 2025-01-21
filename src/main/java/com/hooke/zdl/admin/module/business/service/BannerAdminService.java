@@ -6,10 +6,14 @@ import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.util.SmartPageUtil;
 import com.hooke.zdl.admin.module.business.dao.BannerMapper;
 import com.hooke.zdl.admin.module.business.entity.Banner;
+import com.hooke.zdl.admin.module.business.model.BannerModel;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import static com.hooke.zdl.admin.module.business.entity.table.BannerTableDef.BANNER;
 
 @Service
 public class BannerAdminService extends ServiceImpl<BannerMapper, Banner> {
@@ -25,10 +29,13 @@ public class BannerAdminService extends ServiceImpl<BannerMapper, Banner> {
         removeById(banner.getId());
     }
 
-    public PageResult<Banner> pageBanner(Banner banner, PageParam pageParam) {
-        Page<Banner> page = SmartPageUtil.convert2PageQuery(pageParam);
-        Page<Banner> walletPage = page(page, QueryWrapper.create(banner));
-        return SmartPageUtil.convert2PageResult(page, walletPage.getRecords(), Banner.class);
+    public PageResult<BannerModel> pageBanner(BannerModel banner, PageParam pageParam) {
+        Page<BannerModel> page = SmartPageUtil.convert2PageQuery(pageParam);
+        Page<BannerModel> bannerModelPage = QueryChain.of(Banner.class)
+                .where(BANNER.TITLE.like(banner.getSearchText())
+                        .or(BANNER.LINK.like(banner.getSearchText())))
+                .pageAs(page, BannerModel.class);
+        return SmartPageUtil.convert2PageResult(page, bannerModelPage.getRecords(), BannerModel.class);
     }
 
 }

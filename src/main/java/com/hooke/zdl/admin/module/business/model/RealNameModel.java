@@ -50,4 +50,8 @@ public class RealNameModel {
 
     private LocalDateTime insertTime;
 
+    /**
+     * 搜索条件
+     */
+    private String searchText;
 }

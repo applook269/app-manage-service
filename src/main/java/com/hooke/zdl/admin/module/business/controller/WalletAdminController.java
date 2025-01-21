@@ -41,6 +41,14 @@ public class WalletAdminController {
         return ResponseDTO.ok(walletTransDtlPage);
     }
 
+    @Operation(summary = "保存")
+    @PostMapping("/save")
+    public ResponseDTO<String> save(@RequestBody WalletTransDtl walletTransDtl) {
+        walletAdminService.save(walletTransDtl);
+        return ResponseDTO.ok("保存成功");
+    }
+
+
     @Operation(summary = "充值确认")
     @PostMapping("/recharge-confirm")
     public ResponseDTO<String> rechargeConfirm(@RequestBody WalletTransDtl walletTransDtl) {

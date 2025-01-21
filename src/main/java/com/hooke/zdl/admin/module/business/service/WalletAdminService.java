@@ -67,11 +67,18 @@ public class WalletAdminService {
         return SmartPageUtil.convert2PageResult(page, walletPage.getRecords());
     }
 
+    public void save(WalletTransDtl model) {
+        WalletTransDtl detail = QueryChain.of(walletTransDtlMapper).eq(WalletTransDtl::getId, model.getId()).one();
+        detail.setProof(model.getProof());
+        walletTransDtlMapper.update(detail);
+    }
+
     @Transactional
     public void rechargeConfirm(WalletTransDtl model) {
         WalletTransDtl detail = QueryChain.of(walletTransDtlMapper).eq(WalletTransDtl::getId, model.getId()).one();
         Wallet wallet = QueryChain.of(walletMapper).eq(Wallet::getUserId, detail.getUserId()).one();
         detail.setStatus(model.getStatus());
+        detail.setProof(model.getProof());
         detail.setCompleteTime(LocalDateTime.now());
         if ("SUCCESS".equals(model.getStatus())) {
             // 交易余额：充值时余额+交易金额

@@ -5,6 +5,7 @@ import com.hooke.zdl.admin.common.domain.PageParam;
 import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.domain.ResponseDTO;
 import com.hooke.zdl.admin.module.business.entity.Banner;
+import com.hooke.zdl.admin.module.business.model.BannerModel;
 import com.hooke.zdl.admin.module.business.service.BannerAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,8 +47,8 @@ public class BannerAdminController {
 
     @Operation(summary = "分页Banner")
     @GetMapping("/page")
-    public ResponseDTO<PageResult<Banner>> pageBanner(Banner Banner, PageParam pageParam) {
-        PageResult<Banner> page = bannerAdminService.pageBanner(Banner, pageParam);
+    public ResponseDTO<PageResult<BannerModel>> pageBanner(BannerModel Banner, PageParam pageParam) {
+        PageResult<BannerModel> page = bannerAdminService.pageBanner(Banner, pageParam);
         return ResponseDTO.ok(page);
     }
 

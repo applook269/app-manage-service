@@ -29,7 +29,7 @@ public class RealNameAdminService extends ServiceImpl<RealNameValidateMapper, Re
 
     public PageResult<RealNameModel> pageRealName(RealNameValidate model, PageParam pageParam) {
         Page<RealNameValidate> page = SmartPageUtil.convert2PageQuery(pageParam);
-        Page<RealNameValidate> walletPage = page(page, QueryWrapper.create(model));
+        Page<RealNameValidate> walletPage = page(page, QueryWrapper.create(model).orderBy(RealNameValidate::getInsertTime).desc());
         PageResult<RealNameModel> result = SmartPageUtil.convert2PageResult(page, walletPage.getRecords(), RealNameModel.class);
         List<RealNameModel> list = result.getList();
         if (!list.isEmpty()) {

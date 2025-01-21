@@ -26,6 +26,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.hooke.zdl.admin.module.business.entity.table.ProductHouseTableDef.PRODUCT_HOUSE;
 import static com.hooke.zdl.admin.module.business.entity.table.RealNameValidateTableDef.REAL_NAME_VALIDATE;
 import static com.hooke.zdl.admin.module.business.entity.table.TeamMemberTableDef.TEAM_MEMBER;
 import static com.hooke.zdl.admin.module.business.entity.table.TeamTableDef.TEAM;
@@ -65,7 +66,8 @@ public class UserAdminService extends ServiceImpl<UserMapper, User> {
                 .leftJoin(WALLET).on(WALLET.USER_ID.eq(USER.ID))
                 .leftJoin(TEAM).on(TEAM.LEADER_ID.eq(USER.ID))
                 .leftJoin(REAL_NAME_VALIDATE).on(REAL_NAME_VALIDATE.USER_ID.eq(USER.ID))
-                .leftJoin(refUser).on(refUser.ID.eq(USER.REFERENCE_USER_ID));
+                .leftJoin(refUser).on(refUser.ID.eq(USER.REFERENCE_USER_ID))
+                .where(USER.NAME.like(user.getSearchText()).or(USER.PHONE_NO.like(user.getSearchText())));
 
         Page<CustomerUserModel> userPage = pageAs(page, queryWrapper, CustomerUserModel.class);
         PageResult<CustomerUserModel> result = SmartPageUtil.convert2PageResult(page, userPage.getRecords());

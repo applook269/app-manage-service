@@ -5,6 +5,7 @@ import com.hooke.zdl.admin.common.domain.PageParam;
 import com.hooke.zdl.admin.common.domain.PageResult;
 import com.hooke.zdl.admin.common.domain.ResponseDTO;
 import com.hooke.zdl.admin.module.business.entity.PositionHouse;
+import com.hooke.zdl.admin.module.business.model.PositionHouseModel;
 import com.hooke.zdl.admin.module.business.service.PositionHouseAdminService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,8 +24,8 @@ public class PositionHouseAdminController {
 
     @Operation(summary = "房产持仓")
     @GetMapping("/page")
-    public ResponseDTO<PageResult<PositionHouse>> pagePositionHouse(PositionHouse positionHouse, PageParam pageParam) {
-        PageResult<PositionHouse> model = positionHouseAdminService.pagePositionHouse(positionHouse, pageParam);
+    public ResponseDTO<PageResult<PositionHouseModel>> pagePositionHouse(PositionHouseModel positionHouse, PageParam pageParam) {
+        PageResult<PositionHouseModel> model = positionHouseAdminService.pagePositionHouse(positionHouse, pageParam);
         return ResponseDTO.ok(model);
     }
 

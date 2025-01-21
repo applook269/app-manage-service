@@ -29,21 +29,21 @@ public class HouseAdminController {
         return ResponseDTO.ok(ProductHousePage);
     }
 
-    @Operation(summary = "新增小盈通")
+    @Operation(summary = "新增房产")
     @PostMapping("/add")
     public ResponseDTO<Void> addHouse(@RequestBody ProductHouse model) {
         houseAdminService.addHouse(model);
         return ResponseDTO.ok();
     }
 
-    @Operation(summary = "编辑小盈通")
+    @Operation(summary = "编辑房产")
     @PostMapping("/edit")
     public ResponseDTO<Void> editHouse(@RequestBody ProductHouse model) {
         houseAdminService.editHouse(model);
         return ResponseDTO.ok();
     }
 
-    @Operation(summary = "删除小盈通")
+    @Operation(summary = "删除房产")
     @PostMapping("/remove")
     public ResponseDTO<Void> removeHouse(@RequestBody ProductHouse model) {
         houseAdminService.removeHouse(model);

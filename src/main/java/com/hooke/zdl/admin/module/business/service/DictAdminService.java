@@ -8,17 +8,21 @@ import com.hooke.zdl.admin.module.business.dao.DictMapper;
 import com.hooke.zdl.admin.module.business.entity.Banner;
 import com.hooke.zdl.admin.module.business.entity.Dict;
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryChain;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import static com.hooke.zdl.admin.module.business.entity.table.DictTableDef.DICT;
 
 @Service
 public class DictAdminService extends ServiceImpl<DictMapper, Dict> {
     public PageResult<Dict> pageDict(Dict dict, PageParam pageParam) {
         Page<Dict> page = SmartPageUtil.convert2PageQuery(pageParam);
-        QueryWrapper queryWrapper = QueryWrapper.create(dict);
-        Page<Dict> paged = page(page, queryWrapper);
-        return SmartPageUtil.convert2PageResult(page, paged.getRecords(), Dict.class);
+        Page<Dict> dictPage = QueryChain.of(Dict.class)
+                .where(DICT.DICT_KEY.like(dict.getDictKey()))
+                .page(page);
+        return SmartPageUtil.convert2PageResult(page, dictPage.getRecords(), Dict.class);
     }
 
     public void addDict(Dict dict) {

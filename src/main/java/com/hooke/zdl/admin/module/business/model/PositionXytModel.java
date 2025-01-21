@@ -91,4 +91,14 @@ public class PositionXytModel {
      * 余额
      */
     private BigDecimal balance;
+
+    /**
+     * 产品名称
+     */
+    private String productName;
+
+    /**
+     * 搜索条件
+     */
+    private String searchText;
 }

@@ -109,4 +109,9 @@ public class WalletTransDtlModel {
      * 是否羊毛用户
      */
     private Boolean isWool;
+
+    /**
+     * 搜索条件
+     */
+    private String searchText;
 }
